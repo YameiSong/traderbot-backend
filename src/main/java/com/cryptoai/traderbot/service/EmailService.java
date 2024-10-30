@@ -12,7 +12,7 @@ public class EmailService {
 
     private JavaMailSender javaMailSender;
 
-    public void SendVerificationOtpEmail(String email, String otp) throws MessagingException {
+    public void sendVerificationOtpEmail(String email, String otp) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, "utf-8");
 

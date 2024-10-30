@@ -9,6 +9,9 @@ public class TwoFactorAuth {
     @JsonProperty("enabled")
     private boolean enabled = false;
 
+    @JsonProperty("verificationType")
+    private VerificationType verificationType;
+
     @JsonProperty("sendTo")
-    private VerificationType sendTo;
+    private String sendTo;
 }

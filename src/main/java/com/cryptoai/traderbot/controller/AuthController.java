@@ -105,7 +105,7 @@ public class AuthController {
 
              TwoFactorOTP newTwoFactorOtp = twoFactorOtpService.createTwoFactorOtp(authUser, otp, jwt);
 
-             emailService.SendVerificationOtpEmail(username, otp);
+             emailService.sendVerificationOtpEmail(username, otp);
 
              response.setSession(newTwoFactorOtp.getId());
              return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
@@ -134,6 +134,7 @@ public class AuthController {
         return new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
     }
 
+    @PostMapping("/two-factor/otp/{otp}")
     public ResponseEntity<AuthResponse> verifyOtp(@PathVariable String otp, @RequestParam String id) throws Exception {
         TwoFactorOTP twoFactorOTP = twoFactorOtpService.findById(id);
 

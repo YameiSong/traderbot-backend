@@ -9,7 +9,7 @@ public interface UserService {
     User findUserByEmail(String email) throws Exception;
     User findUserById(Long userId) throws Exception;
 
-    User enableTwoFactorAuth(VerificationType verificationType, User user);
+    User enableTwoFactorAuth(VerificationType verificationType, String sendTo, User user);
 
     User updatePassword(User user, String newPassword);
 
