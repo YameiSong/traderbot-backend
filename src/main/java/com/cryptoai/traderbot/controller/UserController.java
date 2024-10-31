@@ -56,7 +56,7 @@ public class UserController {
         }
         // TODO: Verify OTP by mobile
 
-        return new ResponseEntity<>("Verification OTP string sent successfully", HttpStatus.OK);
+        return new ResponseEntity<>("Verification OTP string sent successfully", HttpStatus.CREATED);
     }
 
     @PatchMapping("/api/users/enable-tow-factor/verify-otp/{otp}")
@@ -100,7 +100,7 @@ public class UserController {
         response.setSession(token.getId());
         response.setMessage("Password reset OTP sent successfully");
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PatchMapping("/auth/users/reset-password/verify-otp")
