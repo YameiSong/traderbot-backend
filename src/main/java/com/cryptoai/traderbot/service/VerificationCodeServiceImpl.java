@@ -27,11 +27,7 @@ public class VerificationCodeServiceImpl implements VerificationCodeService{
 
     @Override
     public VerificationCode getVerificationCodeById(Long id) throws Exception {
-        Optional<VerificationCode> verificationCode = verificationCodeRepository.findById(id);
-        if (verificationCode.isPresent()) {
-            return verificationCode.get();
-        }
-        throw new Exception("Verification code not found");
+        return verificationCodeRepository.findById(id).orElseThrow(() -> new Exception("Verification code not found"));
     }
 
     @Override
