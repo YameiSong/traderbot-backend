@@ -11,8 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @RestController
-@RequestMapping("/api/wallet")
 public class WalletController {
 
     @Autowired
@@ -43,7 +44,7 @@ public class WalletController {
             @RequestBody WalletTransaction req) throws Exception {
         User senderUser = userService.findUserByJwt(jwt);
         Wallet receiverWallet = walletService.findWalletById(walletId);
-        Wallet senderWallet = walletService.walletToWalletTransfer(senderUser, receiverWallet, req.getAmount());
+        Wallet senderWallet = walletService.walletToWalletTransfer(senderUser, receiverWallet, req.getAmount(), req.getPurpose());
         return new ResponseEntity<>(senderWallet, HttpStatus.OK);
     }
 
@@ -66,6 +67,9 @@ public class WalletController {
         Wallet wallet = walletService.getUserWallet(user);
         PaymentOrder order = paymentService.getPaymentOrderById(orderId);
         Boolean status = paymentService.ProceedPaymentOrder(order, paymentId);
+        if(wallet.getBalance() == null) {
+            wallet.setBalance(BigDecimal.ZERO);
+        }
         if (status) {
             // TODO: Maybe should subtract amount from wallet?
             wallet = walletService.addBalance(wallet, order.getAmount());

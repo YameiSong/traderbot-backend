@@ -5,6 +5,7 @@ import com.cryptoai.traderbot.model.User;
 import com.cryptoai.traderbot.model.Wallet;
 import com.cryptoai.traderbot.model.WalletTransaction;
 import com.cryptoai.traderbot.model.Withdrawal;
+import com.cryptoai.traderbot.service.TransactionService;
 import com.cryptoai.traderbot.service.UserService;
 import com.cryptoai.traderbot.service.WalletService;
 import com.cryptoai.traderbot.service.WithdrawalService;
@@ -27,8 +28,8 @@ public class WithdrawalController {
     @Autowired
     private UserService userService;
 
-//    @Autowired
-//    private WalletTransactionService walletTransactionService;
+    @Autowired
+    private TransactionService transactionService;
 
     @PostMapping("/api/withdrawal/{amount}")
     public ResponseEntity<?> withdrawalRequest(
@@ -41,13 +42,13 @@ public class WithdrawalController {
         Withdrawal withdrawal = withdrawalService.requestWithdrawal(amount, user);
         walletService.addBalance(userWallet, -withdrawal.getAmount());
 
-//        WalletTransaction walletTransaction = new WalletTransactionService.createTransaction(
-//                userWallet,
-//                WalletTransactionType.WITHDRAWAL,
-//                null,
-//                "Bank account withdrawal",
-//                withdrawal.getAmount()
-//        );
+        WalletTransaction transaction = transactionService.createTransaction(
+                userWallet,
+                WalletTransactionType.WITHDRAWAL,
+                null,
+                "Bank account withdrawal",
+                withdrawal.getAmount()
+        );
 
         return new ResponseEntity<>(withdrawal, HttpStatus.OK);
     }

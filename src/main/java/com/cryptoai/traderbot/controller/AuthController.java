@@ -8,6 +8,7 @@ import com.cryptoai.traderbot.response.AuthResponse;
 import com.cryptoai.traderbot.service.CustomUserDetailsService;
 import com.cryptoai.traderbot.service.EmailService;
 import com.cryptoai.traderbot.service.TwoFactorOtpService;
+import com.cryptoai.traderbot.service.WatchlistService;
 import com.cryptoai.traderbot.utils.OtpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,9 @@ public class AuthController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private WatchlistService watchlistService;
+
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> register(@RequestBody User user) throws Exception {
 
@@ -50,6 +54,8 @@ public class AuthController {
         newUser.setPassword(user.getPassword());
 
         User savedUser = userRepository.save(newUser);
+
+        watchlistService.createWatchlist(savedUser);
 
         Authentication auth = new UsernamePasswordAuthenticationToken(
                 user.getEmail(),

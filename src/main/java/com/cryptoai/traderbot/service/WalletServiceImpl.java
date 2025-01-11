@@ -1,16 +1,21 @@
 package com.cryptoai.traderbot.service;
 
 import com.cryptoai.traderbot.domain.OrderType;
+import com.cryptoai.traderbot.domain.WalletTransactionType;
 import com.cryptoai.traderbot.model.Order;
 import com.cryptoai.traderbot.model.User;
 import com.cryptoai.traderbot.model.Wallet;
+import com.cryptoai.traderbot.model.WalletTransaction;
 import com.cryptoai.traderbot.repository.WalletRepository;
+import com.cryptoai.traderbot.repository.WalletTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class WalletServiceImpl implements WalletService{
@@ -18,12 +23,16 @@ public class WalletServiceImpl implements WalletService{
     @Autowired
     private WalletRepository walletRepository;
 
+    @Autowired
+    private WalletTransactionRepository walletTransactionRepository;
+
     @Override
     public Wallet getUserWallet(User user) {
         Wallet wallet = walletRepository.findByUserId(user.getId());
         if (wallet == null) {
             wallet = new Wallet();
             wallet.setUser(user);
+            walletRepository.save(wallet);
         }
         return wallet;
     }
@@ -42,7 +51,7 @@ public class WalletServiceImpl implements WalletService{
     }
 
     @Override
-    public Wallet walletToWalletTransfer(User sender, Wallet receiverWallet, Long amount) throws Exception {
+    public Wallet walletToWalletTransfer(User sender, Wallet receiverWallet, Long amount, String purpose) throws Exception {
         Wallet senderWallet = getUserWallet(sender);
         if (senderWallet.getBalance().compareTo(BigDecimal.valueOf(amount)) < 0) {
             throw new Exception("Insufficient balance");
@@ -54,6 +63,24 @@ public class WalletServiceImpl implements WalletService{
         BigDecimal receiverBalance = receiverWallet.getBalance().add(BigDecimal.valueOf(amount));
         receiverWallet.setBalance(receiverBalance);
         walletRepository.save(receiverWallet);
+
+        WalletTransaction senderTransaction = new WalletTransaction();
+        senderTransaction.setWallet(senderWallet);
+        senderTransaction.setType(WalletTransactionType.TRANSFER);
+        senderTransaction.setDate(LocalDate.now());
+        senderTransaction.setPurpose(purpose);
+        senderTransaction.setAmount(-amount);
+        senderTransaction.setTransferId(UUID.randomUUID().toString()); // Generate a random transfer ID
+        walletTransactionRepository.save(senderTransaction);
+
+        WalletTransaction receiverTransaction = new WalletTransaction();
+        receiverTransaction.setWallet(receiverWallet);
+        receiverTransaction.setType(WalletTransactionType.TRANSFER);
+        receiverTransaction.setDate(LocalDate.now());
+        receiverTransaction.setPurpose(purpose);
+        receiverTransaction.setAmount(amount);
+        receiverTransaction.setTransferId(senderTransaction.getTransferId()); // Use the same transfer ID
+        walletTransactionRepository.save(receiverTransaction);
 
         return senderWallet;
     }
