@@ -147,6 +147,7 @@ public class AuthController {
         if (twoFactorOtpService.verifyTwoFactorOtp(twoFactorOTP, otp)) {
             AuthResponse response = new AuthResponse();
             response.setJwt(twoFactorOTP.getJwt());
+            response.setStatus(true);
             response.setTwoFactorAuthEnabled(true);
             response.setMessage("Two factor authentication verified successfully");
             return new ResponseEntity<>(response, HttpStatus.OK);
