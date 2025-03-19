@@ -14,7 +14,6 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CoinServiceImpl implements CoinService{
@@ -67,6 +66,7 @@ public class CoinServiceImpl implements CoinService{
         try {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
+            headers.set("Accept", "application/json");
             HttpEntity<String> entity = new HttpEntity<>("parameters", headers);
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 

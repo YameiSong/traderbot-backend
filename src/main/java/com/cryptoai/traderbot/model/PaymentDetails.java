@@ -12,12 +12,16 @@ public class PaymentDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @JsonProperty("accountNumber")
     private String accountNumber;
 
+    @JsonProperty("accountHolderName")
     private String accountHolderName;
 
+    @JsonProperty("ifsc")
     private String ifsc;
 
+    @JsonProperty("bankName")
     private String bankName;
 
     @OneToOne

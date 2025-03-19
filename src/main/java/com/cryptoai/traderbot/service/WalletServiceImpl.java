@@ -90,7 +90,11 @@ public class WalletServiceImpl implements WalletService{
         Wallet wallet = getUserWallet(user);
         BigDecimal newBalance;
         if (order.getOrderType().equals(OrderType.BUY)) {
-            newBalance = wallet.getBalance().subtract(order.getPrice());
+            BigDecimal orderPrice = order.getPrice();
+            BigDecimal orderQuantity = BigDecimal.valueOf(order.getOrderItem().getQuantity());
+            BigDecimal totalAmount = orderPrice.multiply(orderQuantity);
+            System.out.println("orderPrice: " + orderPrice + ", orderQuantity: " + orderQuantity + ", totalAmount: " + totalAmount);
+            newBalance = wallet.getBalance().subtract(totalAmount);
             if (newBalance.compareTo(BigDecimal.ZERO) < 0) {
                 throw new RuntimeException("Insufficient balance for this order");
             }

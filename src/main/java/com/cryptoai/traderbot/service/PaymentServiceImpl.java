@@ -44,7 +44,7 @@ public class PaymentServiceImpl implements PaymentService {
             paymentOrder.setStatus(PaymentOrderStatus.PENDING);
         }
         if (paymentOrder.getStatus().equals(PaymentOrderStatus.PENDING)) {
-            if (paymentOrder.getPaymentMethod().equals(PaymentMethod.STRIPE)) {
+            if (paymentOrder.getPaymentMethod().equals(PaymentMethod.Stripe)) {
                 try {
                     Stripe.apiKey = stripeApiKey;
 
@@ -73,31 +73,33 @@ public class PaymentServiceImpl implements PaymentService {
         SessionCreateParams params = SessionCreateParams.builder()
                 .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl("http://localhost:5454/wallet?order_id="+orderId)
-                .setCancelUrl("http://localhost:5454/payment/cancel")
+                .setSuccessUrl("http://localhost:5173/wallet?order_id=" + orderId + "&session_id={CHECKOUT_SESSION_ID}")
+                .setCancelUrl("http://localhost:5173/payment/cancel")
                 .addLineItem(SessionCreateParams.LineItem.builder()
                         .setQuantity(1L)
                         .setPriceData(
                                 SessionCreateParams.LineItem.PriceData.builder()
                                         .setCurrency("usd")
-                                        .setUnitAmount(amount*100) // unit: cent
-                                        .setProductData(SessionCreateParams
-                                                .LineItem
-                                                .PriceData
-                                                .ProductData
-                                                .builder()
+                                        .setUnitAmount(amount * 100) // Convert to cents
+                                        .setProductData(SessionCreateParams.LineItem.PriceData.ProductData.builder()
                                                 .setName("Top up wallet")
-                                                .build()
-                                        ).build()
-                        ).build()
-                ).build();
+                                                .build())
+                                        .build())
+                        .build())
+                .build();
 
         Session session = Session.create(params);
 
-        System.out.println("session ___ " + session);
-
         PaymentResponse paymentResponse = new PaymentResponse();
         paymentResponse.setPaymentURL(session.getUrl());
+
         return paymentResponse;
+    }
+
+    @Override
+    public String getPaymentIntent(String sessionId) throws StripeException {
+        Stripe.apiKey = stripeApiKey;
+        Session session = Session.retrieve(sessionId);
+        return session.getPaymentIntent();
     }
 }

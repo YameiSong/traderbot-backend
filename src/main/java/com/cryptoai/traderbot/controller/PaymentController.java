@@ -12,6 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 public class PaymentController {
 
@@ -31,12 +34,22 @@ public class PaymentController {
         PaymentResponse paymentResponse;
         PaymentOrder order = paymentService.createOrder(user, amount, paymentMethod);
 
-        if (paymentMethod.equals(PaymentMethod.STRIPE)) {
+        if (paymentMethod.equals(PaymentMethod.Stripe)) {
             paymentResponse = paymentService.createStripePaymentLink(user, amount, order.getId());
         } else {
             throw new Exception("Unknown payment method");
         }
 
         return new ResponseEntity<>(paymentResponse, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/api/retrieve-payment-intent/{sessionId}")
+    public ResponseEntity<Map<String, String>> getPaymentIntent(@PathVariable String sessionId) throws StripeException {
+        String paymentIntentId = paymentService.getPaymentIntent(sessionId);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("payment_id", paymentIntentId);
+
+        return ResponseEntity.ok(response);
     }
 }

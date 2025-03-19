@@ -11,4 +11,5 @@ public interface PaymentService {
     PaymentOrder getPaymentOrderById(Long id) throws Exception;
     Boolean ProceedPaymentOrder(PaymentOrder paymentOrder, String paymentId);
     PaymentResponse createStripePaymentLink(User user, Long amount, Long orderId) throws StripeException;
+    String getPaymentIntent(String sessionId) throws StripeException;
 }

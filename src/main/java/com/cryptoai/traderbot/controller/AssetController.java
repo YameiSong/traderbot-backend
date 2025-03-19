@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/asset")
+@RequestMapping("/api/assets")
 public class AssetController {
 
     @Autowired
@@ -27,7 +27,7 @@ public class AssetController {
         return new ResponseEntity<>(asset, HttpStatus.OK);
     }
 
-    @GetMapping("/user/{coinId}/user")
+    @GetMapping("/coin/{coinId}/user")
     public ResponseEntity<Asset> getAssetByUserIdAndCoinId(@PathVariable String coinId, @RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJwt(jwt);
         Asset asset = assetService.findAssetByUserIdAndCoinId(user.getId(), coinId);

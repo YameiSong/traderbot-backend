@@ -129,6 +129,8 @@ public class AuthController {
 
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
+        System.out.println(userDetails.getUsername() + " " + userDetails.getPassword());
+
         if (userDetails == null) {
             throw new BadCredentialsException("Invalid username");
         }
