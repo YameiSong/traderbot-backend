@@ -50,4 +50,15 @@ public class WatchlistController {
         Coin addedCoin = watchlistService.addItemToWatchlist(coin, user);
         return ResponseEntity.ok(addedCoin);
     }
+
+    @PatchMapping("/remove/coin/{coinId}")
+    public ResponseEntity<Coin> removeItemFromWatchlist(
+            @RequestHeader("Authorization") String jwt,
+            @PathVariable String coinId
+    ) throws Exception {
+        User user = userService.findUserByJwt(jwt);
+        Coin coin = coinService.findById(coinId);
+        Coin deletedCoin = watchlistService.removeItemFromWatchlist(coin, user);
+        return ResponseEntity.ok(deletedCoin);
+    }
 }

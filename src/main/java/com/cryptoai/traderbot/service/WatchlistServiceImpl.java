@@ -51,4 +51,16 @@ public class WatchlistServiceImpl implements WatchlistService {
         watchlistRepository.save(watchlist);
         return coin;
     }
+
+    @Override
+    public Coin removeItemFromWatchlist(Coin coin, User user) throws Exception {
+        Watchlist watchlist = findUserWatchlist(user.getId());
+
+        if (watchlist.getCoins().contains(coin)) {
+            watchlist.getCoins().remove(coin);
+        }
+
+        watchlistRepository.save(watchlist);
+        return coin;
+    }
 }

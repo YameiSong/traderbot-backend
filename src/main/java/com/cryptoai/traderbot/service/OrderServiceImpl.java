@@ -31,13 +31,13 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public Order createOrder(User user, OrderItem orderItem, OrderType orderType) {
-        double price = orderItem.getCoin().getCurrentPrice() * orderItem.getQuantity();
+        double value = orderItem.getCoin().getCurrentPrice() * orderItem.getQuantity();
 
         Order order = new Order();
         order.setUser(user);
         order.setOrderItem(orderItem);
         order.setOrderType(orderType);
-        order.setPrice(BigDecimal.valueOf(price));
+        order.setPrice(BigDecimal.valueOf(value));
         order.setTimestamp(LocalDateTime.now());
         order.setOrderStatus(OrderStatus.PENDING);
 
