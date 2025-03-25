@@ -1,7 +1,6 @@
 package com.cryptoai.traderbot.controller;
 
 import com.cryptoai.traderbot.model.PromptBody;
-import com.cryptoai.traderbot.response.ApiResponse;
 import com.cryptoai.traderbot.service.ChatbotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

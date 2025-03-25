@@ -83,7 +83,7 @@ public class ChatbotServiceImpl implements ChatbotService {
                                                                         .put("type", "string")
                                                                         .put("description", "The currency name, id, or symbol"))
                                                                 .put("currencyData", new JSONObject()
-                                                                        .put("type", "object")  // Changed from "string" to "object"
+                                                                        .put("type", "string")
                                                                         .put("description", "Detailed data about the currency, including price, market cap, etc.")
                                                                 )
                                                         )
@@ -150,6 +150,11 @@ public class ChatbotServiceImpl implements ChatbotService {
                                 )
                         )
                 )
+        )
+        .put("toolConfig", new JSONObject()
+                .put("functionCallingConfig", new JSONObject()
+                        .put("mode", "ANY")
+                )
         );
 
         HttpHeaders headers = new HttpHeaders();
@@ -177,6 +182,7 @@ public class ChatbotServiceImpl implements ChatbotService {
         functionResponse.setFunctionName(functionName);
         functionResponse.setCurrencyName(currencyName);
         functionResponse.setCurrencyData(currencyData);
+
         return functionResponse;
     }
 }
