@@ -49,7 +49,8 @@ public class AppConfig {
                 config.setAllowedOrigins(
                         Arrays.asList(
                                 "http://localhost:5173",
-                                "http://localhost:3000"
+                                "http://localhost:3000",
+                                "http://35.247.65.206"
                         )
                 );
                 config.setAllowCredentials(true);
